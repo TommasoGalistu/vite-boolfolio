@@ -4,6 +4,7 @@ export default {
   name: "PosterPage",
   data() {
     return {
+      linkUrl: "",
       posts: [],
       categories: [],
       types: [],
@@ -15,6 +16,8 @@ export default {
         .get(urlApi)
         .then((response) => {
           this.posts = response.data;
+          // attivo il bottone delle pagine
+          this.linkUrl = urlApi;
         })
         .catch((error) => {
           console.log(error);
@@ -36,6 +39,7 @@ export default {
               <th scope="col">Id</th>
               <th scope="col">Title</th>
               <th scope="col">Category</th>
+              <th scope="col">Tipi</th>
             </tr>
           </thead>
           <tbody>
@@ -43,6 +47,11 @@ export default {
               <td>{{ post.id }}</td>
               <td>{{ post.title }}</td>
               <td>{{ post.category?.name ? post.category.name : "-" }}</td>
+              <td class="typeColumn">
+                <span v-for="(type, index) in post.types" :key="index">{{
+                  type.name
+                }}</span>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -52,7 +61,7 @@ export default {
           :key="index"
           v-html="link.label"
           @click="getApi(link.url)"
-          :disabled="active"
+          :class="{ active: link.url === linkUrl }"
         ></button>
       </div>
       <div class="col-4">colonna dei tipi e categorie</div>
